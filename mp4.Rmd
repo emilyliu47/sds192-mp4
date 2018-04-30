@@ -25,6 +25,11 @@ test_stations <- db %>%
 test_stations %>%
   distinct(station_id) %>%
   arrange(station_id)
+
+
+test_stations_sum <- db %>%
+  dbGetQuery("SELECT *
+             FROM station_summary;")
 ```
 
 ```{r}
@@ -58,7 +63,8 @@ test_set %>%
   arrange(desc(N)) %>%
   head(10)
 ```
+
 ```{r}
 women_10 %>%
-  left_join(test_stations, by = c("start_station_id" = "station_id"))
+  left_join(test_stations_sum, by = c("start_station_id" = "station_id"))
 ```
