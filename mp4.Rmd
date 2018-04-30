@@ -4,4 +4,61 @@ author: "Emily Liu"
 date: "April 28, 2018"
 output: html_document
 ---
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "citibike")
 
+```
+
+```{r}
+test_set <- db %>%
+          dbGetQuery("SELECT * 
+             FROM trips
+             LIMIT 100;")
+test_set
+
+test_stations <- db %>%
+  dbGetQuery("SELECT *
+             FROM station_months;")
+
+test_stations %>%
+  distinct(station_id) %>%
+  arrange(station_id)
+```
+
+```{r}
+# Top 10 stations overall
+test_set %>%
+  arrange(start_station_id)
+test_set %>% 
+  select(start_station_id) %>%
+  group_by(start_station_id) %>%
+  summarize(N = n()) %>%
+  arrange(desc(N)) %>%
+  head(10)
+  
+```
+```{r}
+# Top 10 stations for women
+women_10 <- test_set %>% 
+  filter(gender == 2) %>%
+  select(start_station_id) %>%
+  group_by(start_station_id) %>%
+  summarize(N = n()) %>%
+  arrange(desc(N)) %>%
+  head(10)
+
+# Top 10 stations for subscribers
+test_set %>% 
+  filter(user_type == 'Subscriber') %>%
+  select(start_station_id) %>%
+  group_by(start_station_id) %>%
+  summarize(N = n()) %>%
+  arrange(desc(N)) %>%
+  head(10)
+```
+```{r}
+women_10 %>%
+  left_join(test_stations, by = c("start_station_id" = "station_id"))
+```
