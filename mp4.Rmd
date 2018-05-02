@@ -7,6 +7,8 @@ output: html_document
 ```{r}
 library(mdsr)
 library(RMySQL)
+library(leaflet)
+library(sf)
 db <- dbConnect_scidb(dbname = "citibike")
 
 ```
@@ -95,8 +97,9 @@ ORDER BY N desc
 LIMIT 10;")
 ```
 ```{r}
+# Points for overall start stations
 all_start_pts <- tribble (
-  ~name, ~lat, ~lon
+  ~name, ~lat, ~lon,
   "Pershing Square North", -73.97771, 40.75187,
   "E 17 St & Broadway", -73.99009, 40.73705,
   "Broadway & E 22 St", -73.98955, 40.74034,
@@ -108,6 +111,14 @@ all_start_pts <- tribble (
   "12 Ave & W 40 St", -74.00278, 40.76088,
   "W 41 St & 8 Ave", -73.99003, 40.75461
 )
+
+all_start_sf <- all_start_pts %>%
+  st_as_sf(coords = c("lat", "lon")) %>%
+  st_set_crs(4326)
+
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(data = all_start_sf, popup = ~name)
 ```
 
 
