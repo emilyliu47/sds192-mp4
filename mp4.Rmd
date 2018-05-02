@@ -7,6 +7,7 @@ output: html_document
 ```{r}
 library(mdsr)
 library(RMySQL)
+library(tidyverse)
 db <- dbConnect_scidb(dbname = "citibike")
 
 ```
@@ -121,3 +122,28 @@ ORDER BY visits desc
 LIMIT 10;")
 ```
 
+```{r}
+#finding most visited stations for females
+
+#start stations and their number of visits for females
+start_tally <- db %>%
+  dbGetQuery("
+SELECT trips.start_station_id, sum(1) AS N_start
+FROM citibike.trips
+WHERE gender = 2
+GROUP BY trips.start_station_id
+ORDER BY N_start desc;")
+
+end_tally <- db %>%
+  dbGetQuery("
+SELECT trips.end_station_id, sum(1) AS N_end
+FROM citibike.trips
+WHERE gender = 2
+GROUP BY trips.end_station_id
+ORDER BY N_end desc;")
+
+#trying to full join start_tally and end_tally in order to calculate the total number of visits, but need to have same column name? 
+rename(start_tally, "start_station_id" = "station_id")
+rename(end_tally, "end_station_id" = "station_id")
+
+female_visits <- full_join(start_tally, end_tally, by = "station_id"))
