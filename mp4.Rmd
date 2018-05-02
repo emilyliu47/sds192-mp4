@@ -7,12 +7,12 @@ output: html_document
 ```{r}
 library(mdsr)
 library(RMySQL)
-<<<<<<< HEAD
+
 library(leaflet)
 library(sf)
-=======
+
 library(tidyverse)
->>>>>>> ede0cad1b5eaba81137881a491aad310fe85acba
+
 db <- dbConnect_scidb(dbname = "citibike")
 
 ```
