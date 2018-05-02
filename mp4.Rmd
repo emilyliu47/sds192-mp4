@@ -44,6 +44,7 @@ test_set %>%
   head(10)
   
 ```
+
 ```{r}
 # Top 10 stations for women
 women_10 <- test_set %>% 
@@ -65,6 +66,43 @@ test_set %>%
 ```
 
 ```{r}
-women_10 %>%
+top_10_women <- women_10 %>%
   left_join(test_stations_sum, by = c("start_station_id" = "station_id"))
+
+View(top_10_women)
 ```
+
+```{r}
+#finding top 10 start stations overall
+db %>%
+  dbGetQuery("
+SELECT trips.start_station_id,  ss.name, ss.lat, ss.lon, sum(1) AS N
+FROM citibike.trips
+JOIN citibike.station_summary ss ON trips.start_station_id = ss.station_id
+GROUP BY trips.start_station_id
+ORDER BY N desc
+LIMIT 10;")
+
+#finding top 10 start stations visited by women
+db %>%
+  dbGetQuery("
+SELECT trips.start_station_id,  ss.name, ss.lat, ss.lon, sum(1) AS N
+FROM citibike.trips
+JOIN citibike.station_summary ss ON trips.start_station_id = ss.station_id
+WHERE gender = 2
+GROUP BY trips.start_station_id
+ORDER BY N desc
+LIMIT 10;")
+```
+
+```{r}
+#finding top 10 most visited stations for everyone
+db %>%
+  dbGetQuery("
+SELECT *, num_starts + num_stops AS visits
+FROM citibike.station_summary
+JOIN citibike.trips t ON ss.station_id = t.station_id
+ORDER BY visits desc
+LIMIT 10;")
+```
+
