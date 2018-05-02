@@ -100,8 +100,7 @@ LIMIT 10;")
 db %>%
   dbGetQuery("
 SELECT *, num_starts + num_stops AS visits
-FROM citibike.station_summary
-JOIN citibike.trips t ON ss.station_id = t.station_id
+FROM citibike.station_summary ss
 ORDER BY visits desc
 LIMIT 10;")
 ```
