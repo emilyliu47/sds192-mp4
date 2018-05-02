@@ -94,6 +94,22 @@ GROUP BY trips.start_station_id
 ORDER BY N desc
 LIMIT 10;")
 ```
+```{r}
+all_start_pts <- tribble (
+  ~name, ~lat, ~lon
+  "Pershing Square North", -73.97771, 40.75187,
+  "E 17 St & Broadway", -73.99009, 40.73705,
+  "Broadway & E 22 St", -73.98955, 40.74034,
+  "W 21 St & 6 Ave", -73.99416, 40.74174,
+  "West St & Chambers St", -74.01322, 40.71755,
+  "8 Ave & W 31 St", -73.99468, 40.75059,
+  "8 Ave & W 33 St", -73.99393, 40.75155,
+  "W 20 St & 11 Ave", -74.00776, 40.74674,
+  "12 Ave & W 40 St", -74.00278, 40.76088,
+  "W 41 St & 8 Ave", -73.99003, 40.75461
+)
+```
+
 
 ```{r}
 #finding top 10 most visited stations for everyone
